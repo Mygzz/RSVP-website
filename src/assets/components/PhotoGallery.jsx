@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import img1 from "../courselPicture/1.jpg";
-import img2 from "../courselPicture/2.jpg";
+
 import img3 from "../courselPicture/3.jpg";
 import img4 from "../courselPicture/4.jpg";
 import img5 from "../courselPicture/5.jpg";
@@ -14,7 +14,7 @@ const PhotoGallery = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
 
-  const galleryImages = [img1, img2, img3, img4, img5, img6, img7, img8];
+  const galleryImages = [img1, img3, img4, img5, img6, img7, img8];
 
   // Replace this with your Google Drive video embed URL
   const googleDriveVideoUrl =
@@ -67,9 +67,7 @@ const PhotoGallery = () => {
 
         {/* Image Carousel Section */}
         <div className="mb-16">
-          <h3 className="text-lg md:text-xl font-['Playfair_Display'] font-semibold text-[#49284D] text-center mb-6">
-            Our Precious Moments
-          </h3>
+          
 
           {/* Carousel Container */}
           <div className="relative max-w-4xl mx-auto">
@@ -159,9 +157,7 @@ const PhotoGallery = () => {
 
         {/* Video Section */}
         <div className="max-w-4xl mx-auto">
-          <h3 className="text-lg md:text-xl font-['Playfair_Display'] font-semibold text-[#49284D] text-center mb-6">
-            Our Love Story
-          </h3>
+          
 
           <div className="relative rounded-xl overflow-hidden shadow-2xl bg-black">
             {/* Google Drive Video Embed */}
