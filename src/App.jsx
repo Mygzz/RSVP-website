@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import logo from "./assets/B&M-logo.png";
 import backgroundImage from "./assets/homebg.jpg";
-import PhotoGallery from "./components/PhotoGallery";
+import PhotoGallery from "./assets/components/PhotoGallery";
 import themeBG from "./assets/themebg.jpg";
 import wazeQR from "./assets/qrChruchW.png";
 import googleQR from "./assets/qrChurch.png";
@@ -270,7 +270,7 @@ const App = () => {
             {/* Main Names - Mobile Optimized */}
             <div className="flex flex-col items-center justify-center mb-4 md:mb-8 px-2">
               {/* Benson */}
-              <h2 className="text-7xl sm:text-8xl md:text-9xl font-['Kapakana'] text-[#49284D] tracking-tight md:tracking-wider leading-tight drop-shadow-lg">
+              <h2 className="text-7xl sm:text-8xl md:text-9xl font-['Kapakana'] text-[#49284D] shadow-white tracking-tight md:tracking-wider leading-tight drop-shadow-lg">
                 Benson
               </h2>
 

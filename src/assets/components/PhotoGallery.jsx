@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import img1 from "../assets/courselPicture/1.jpg";
-import img2 from "../assets/courselPicture/2.jpg";
-import img3 from "../assets/courselPicture/3.jpg";
-import img4 from "../assets/courselPicture/4.jpg";
-import img5 from "../assets/courselPicture/5.jpg";
-import img6 from "../assets/courselPicture/6.jpg";
-import img7 from "../assets/courselPicture/7.jpg";
-import img8 from "../assets/courselPicture/8.jpg";
+import img1 from "../courselPicture/1.jpg";
+import img2 from "../courselPicture/2.jpg";
+import img3 from "../courselPicture/3.jpg";
+import img4 from "../courselPicture/4.jpg";
+import img5 from "../courselPicture/5.jpg";
+import img6 from "../courselPicture/6.jpg";
+import img7 from "../courselPicture/7.jpg";
+import img8 from "../courselPicture/8.jpg";
 
 const PhotoGallery = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
