@@ -262,7 +262,7 @@ const App = () => {
           <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4">
             {/* Top Text */}
             <div className="mb-4 md:mb-8 w-full max-w-md">
-              <p className="text-sm md:text-lg lg:text-xl text-[#C587CD] font-['Poppins'] drop-shadow-lg tracking-widest leading-relaxed">
+              <p className="text-sm md:text-lg lg:text-xl text-[#C587CD] font-['Poppins']  drop-shadow-lg tracking-widest leading-relaxed">
                 With hearts entwined and families united
               </p>
             </div>
@@ -270,17 +270,17 @@ const App = () => {
             {/* Main Names - Mobile Optimized */}
             <div className="flex flex-col items-center justify-center mb-4 md:mb-8 px-2">
               {/* Benson */}
-              <h2 className="text-7xl sm:text-8xl md:text-9xl font-['Kapakana'] text-[#49284D] tracking-tight md:tracking-wider leading-tight drop-shadow-lg">
+              <h2 className="text-7xl sm:text-8xl md:text-9xl font-['Kapakana']  text-[#49284D] tracking-tight md:tracking-wider leading-tight drop-shadow-lg [text-shadow:_2px_2px_4px_white,_-2px_-2px_4px_white,_2px_-2px_4px_white,_-2px_2px_4px_white]">
                 Benson
               </h2>
 
               {/* Ampersand */}
-              <h2 className="text-6xl sm:text-7xl md:text-8xl font-['Kapakana'] text-[#49284D] my-1 md:my-2 drop-shadow-lg">
+              <h2 className="text-6xl sm:text-7xl md:text-8xl font-['Kapakana'] [text-shadow:_2px_2px_4px_white,_-2px_-2px_4px_white,_2px_-2px_4px_white,_-2px_2px_4px_white] text-[#49284D] my-1 md:my-2 drop-shadow-lg">
                 &
               </h2>
 
               {/* Mich Rogene */}
-              <h2 className="text-7xl sm:text-8xl md:text-9xl font-['Kapakana'] text-[#49284D] tracking-tight md:tracking-wider leading-tight drop-shadow-lg">
+              <h2 className="text-7xl sm:text-8xl md:text-9xl font-['Kapakana'] [text-shadow:_2px_2px_4px_white,_-2px_-2px_4px_white,_2px_-2px_4px_white,_-2px_2px_4px_white] text-[#49284D] tracking-tight md:tracking-wider leading-tight drop-shadow-lg">
                 Mich Rogene
               </h2>
             </div>
@@ -767,10 +767,9 @@ const App = () => {
             {/* Instructions */}
             <div className="bg-[#E8C2ED] bg-opacity-30 rounded-xl p-4 mt-8 border border-[#C587CD] border-opacity-30">
               <p className="font-['Poppins'] text-sm text-[#49284D] text-center">
-                <strong>How to use:</strong> Open your phone's camera and
-                point it at the QR code, then tap the notification to open
-                directions. You can also click the buttons above for direct
-                links.
+                <strong>How to use:</strong> Open your phone's camera and point
+                it at the QR code, then tap the notification to open directions.
+                You can also click the buttons above for direct links.
               </p>
             </div>
           </div>
