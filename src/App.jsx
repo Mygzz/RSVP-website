@@ -270,7 +270,7 @@ const App = () => {
             {/* Main Names - Mobile Optimized */}
             <div className="flex flex-col items-center justify-center mb-4 md:mb-8 px-2">
               {/* Benson */}
-              <h2 className="text-7xl sm:text-8xl md:text-9xl font-['Kapakana'] text-[#49284D] shadow-white tracking-tight md:tracking-wider leading-tight drop-shadow-lg">
+              <h2 className="text-7xl sm:text-8xl md:text-9xl font-['Kapakana'] text-[#49284D] tracking-tight md:tracking-wider leading-tight drop-shadow-lg">
                 Benson
               </h2>
 
