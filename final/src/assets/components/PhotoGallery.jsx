@@ -17,7 +17,8 @@ const PhotoGallery = () => {
   const galleryImages = [img1, img2, img3, img4, img5, img6, img7, img8];
 
   // Replace this with your Google Drive video embed URL
-  const googleDriveVideoUrl = "https://drive.google.com/file/d/YOUR_VIDEO_ID/view?usp=sharing";
+  const googleDriveVideoUrl =
+    "https://drive.google.com/file/d/1auJfyXfyOIj2BvTDQ8SIN-h5OekfXRc-/view?usp=drive_link";
   
   // Convert to embed URL for better playback
   const getEmbedUrl = (url) => {
