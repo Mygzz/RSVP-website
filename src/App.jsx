@@ -5,23 +5,40 @@ import PhotoGallery from "./assets/components/PhotoGallery";
 import themeBG from "./assets/themebg.jpg";
 import wazeQR from "./assets/qrChruchW.png";
 import googleQR from "./assets/qrChurch.png";
-import arrow from "./assets/arrow.png"
+import arrow from "./assets/arrow.png";
 import mapReception from "./assets/qrReception.png";
-import mapReceptionWaze from "./assets/qrReceptionW.png"
+import mapReceptionWaze from "./assets/qrReceptionW.png";
 import facebookIcon from "./assets/facebook.png";
 import instagramIcon from "./assets/instagram.png";
 import tiktokIcon from "./assets/tik-tok.png";
-
-
 
 const App = () => {
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const [visibleSections, setVisibleSections] = useState(new Set());
   const dropdownRef = useRef(null);
   const mobileMenuRef = useRef(null);
 
-  // Close dropdown when clicking outside
+  // Intersection Observer for scroll animations
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisibleSections((prev) => new Set([...prev, entry.target.id]));
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    const sections = document.querySelectorAll("section[id]");
+    sections.forEach((section) => observer.observe(section));
+
+    return () => sections.forEach((section) => observer.unobserve(section));
+  }, []);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -42,7 +59,6 @@ const App = () => {
     };
   }, []);
 
-  // Smooth scrolling for anchor links
   useEffect(() => {
     const handleSmoothScroll = (e) => {
       const href = e.currentTarget.getAttribute("href");
@@ -82,7 +98,6 @@ const App = () => {
     setIsMobileMenuOpen((prev) => !prev);
   };
 
-  // Common menu items for consistency
   const menuItems = [
     { id: "home", label: "Home" },
     { id: "photo", label: "Photo & Video" },
@@ -103,34 +118,159 @@ const App = () => {
 
   return (
     <div className="bg-[#221024] min-h-screen">
+      <style>{`
+        @keyframes fadeInDown {
+          from {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        
+        @keyframes fadeInLeft {
+          from {
+            opacity: 0;
+            transform: translateX(-30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        
+        @keyframes fadeInRight {
+          from {
+            opacity: 0;
+            transform: translateX(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        
+        @keyframes bounceIn {
+          0% {
+            opacity: 0;
+            transform: scale(0.3);
+          }
+          50% {
+            opacity: 1;
+            transform: scale(1.05);
+          }
+          70% {
+            transform: scale(0.9);
+          }
+          100% {
+            transform: scale(1);
+          }
+        }
+        
+        .animate-fade-in-down {
+          animation: fadeInDown 1s ease-out;
+        }
+        
+        .animate-fade-in-up {
+          animation: fadeInUp 1s ease-out;
+        }
+        
+        .animate-fade-in {
+          animation: fadeIn 1s ease-out;
+        }
+        
+        .animate-fade-in-left {
+          animation: fadeInLeft 1s ease-out;
+        }
+        
+        .animate-fade-in-right {
+          animation: fadeInRight 1s ease-out;
+        }
+        
+        .animate-bounce-in {
+          animation: bounceIn 0.8s ease-out;
+        }
+        
+        .animation-delay-300 {
+          animation-delay: 0.3s;
+          animation-fill-mode: both;
+        }
+        
+        .animation-delay-600 {
+          animation-delay: 0.6s;
+          animation-fill-mode: both;
+        }
+        
+        .animation-delay-900 {
+          animation-delay: 0.9s;
+          animation-fill-mode: both;
+        }
+        
+        .animation-delay-1200 {
+          animation-delay: 1.2s;
+          animation-fill-mode: both;
+        }
+        
+        @keyframes pulse-slow {
+          0%, 100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0.8;
+          }
+        }
+        
+        .animate-pulse-slow {
+          animation: pulse-slow 3s ease-in-out infinite;
+        }
+      `}</style>
+
       {/* Header */}
-      <header className=" bg-[#221024]/80 border-b border-gray-700 sticky top-0 z-50 backdrop-blur-sm bg-[#221024]/80">
+      <header className="bg-[#221024]/90 border-b border-gray-700/50 sticky top-0 z-50 backdrop-blur-md transition-all duration-300 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            {/* Logo/Brand */}
             <div className="flex items-center">
               <img
                 src={logo}
                 alt="B&M Logo"
-                className="h-12 w-12 md:h-16 md:w-16 rounded-full"
+                className="h-12 w-12 md:h-16 md:w-16 rounded-full transform transition-all duration-300 hover:scale-110 hover:rotate-6 hover:shadow-xl"
               />
             </div>
 
-            {/* Right side with dropdown - Hidden on mobile */}
             <div className="hidden md:flex items-center space-x-4">
-              {/* User Dropdown with swap button */}
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={toggleUserDropdown}
-                  className="btn btn-circle swap swap-rotate text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors duration-200"
+                  className="btn btn-circle swap swap-rotate text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-300 hover:bg-white/10 hover:scale-110"
                   aria-expanded={isUserDropdownOpen}
                   aria-haspopup="true"
                 >
-                  {/* Hamburger icon */}
                   <svg
                     className={`${
                       isUserDropdownOpen ? "hidden" : "block"
-                    } fill-current`}
+                    } fill-current transition-transform duration-300`}
                     xmlns="http://www.w3.org/2000/svg"
                     width="28"
                     height="28"
@@ -139,45 +279,38 @@ const App = () => {
                     <path d="M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,128v42.67H448V128Z" />
                   </svg>
 
-                  {/* Close icon */}
                   <svg
                     className={`${
                       isUserDropdownOpen ? "block" : "hidden"
-                    } fill-current`}
+                    } fill-current transition-transform duration-300 rotate-90`}
                     xmlns="http://www.w3.org/2000/svg"
                     width="28"
                     height="28"
                     viewBox="0 0 512 512"
                   >
-                    <polygon
-                      points="400 145.49 366.51 112 256 222.51 
-                        145.49 112 112 145.49 222.51 256 
-                        112 366.51 145.49 400 256 289.49 
-                        366.51 400 400 366.51 289.49 256 
-                        400 145.49"
-                    />
+                    <polygon points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49" />
                   </svg>
                 </button>
 
-                {/* Dropdown Menu */}
                 <div
-                  className={`absolute right-0 z-50 mt-2 w-56 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 transform transition-all duration-200 ease-out ${
+                  className={`absolute right-0 z-50 mt-2 w-56 origin-top-right bg-white/95 backdrop-blur-sm border border-gray-200 divide-y divide-gray-100 rounded-lg shadow-xl ring-1 ring-black ring-opacity-5 transform transition-all duration-300 ease-out ${
                     isUserDropdownOpen
-                      ? "opacity-100 visible scale-100"
-                      : "opacity-0 invisible scale-95"
+                      ? "opacity-100 visible scale-100 translate-y-0"
+                      : "opacity-0 invisible scale-95 -translate-y-2"
                   }`}
                   role="menu"
                   aria-orientation="vertical"
                 >
                   <div className="py-1">
-                    {menuItems.map((item) => (
+                    {menuItems.map((item, index) => (
                       <a
                         key={item.id}
                         href={`#${item.id}`}
                         onClick={() => handleNavClick(item.id)}
-                        className={`flex items-center px-4 py-2 text-sm hover:bg-gray-50 transition-colors duration-150 ${
+                        style={{ animationDelay: `${index * 50}ms` }}
+                        className={`flex items-center px-4 py-2 text-sm hover:bg-purple-50 transition-all duration-200 transform hover:translate-x-1 ${
                           activeSection === item.id
-                            ? "text-[#C587CD] font-semibold bg-purple-50"
+                            ? "text-[#C587CD] font-semibold bg-purple-50 border-l-4 border-[#C587CD]"
                             : "text-gray-700 hover:text-gray-900"
                         }`}
                       >
@@ -189,16 +322,15 @@ const App = () => {
               </div>
             </div>
 
-            {/* Mobile menu button - Visible only on mobile */}
             <div className="md:hidden flex items-center">
               <button
                 onClick={toggleMobileMenu}
-                className="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-gray-300 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white transition-colors duration-200"
+                className="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-gray-300 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white transition-all duration-300 hover:scale-110"
                 aria-label="mobile menu"
                 aria-expanded={isMobileMenuOpen}
               >
                 <svg
-                  className="w-6 h-6"
+                  className="w-6 h-6 transition-transform duration-300"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -224,10 +356,9 @@ const App = () => {
           </div>
         </div>
 
-        {/* Mobile Navigation Menu */}
         <div
           ref={mobileMenuRef}
-          className={`md:hidden bg-white border-t border-gray-200 transition-all duration-300 ease-in-out overflow-hidden ${
+          className={`md:hidden bg-white/95 backdrop-blur-sm border-t border-gray-200 transition-all duration-500 ease-in-out overflow-hidden ${
             isMobileMenuOpen ? "max-h-64 opacity-100 py-2" : "max-h-0 opacity-0"
           }`}
         >
@@ -237,7 +368,7 @@ const App = () => {
                 key={item.id}
                 href={`#${item.id}`}
                 onClick={() => handleNavClick(item.id)}
-                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-150 ${
+                className={`block px-3 py-2 rounded-md text-base font-medium transition-all duration-200 transform hover:translate-x-2 ${
                   activeSection === item.id
                     ? "text-[#C587CD] bg-purple-50 font-semibold"
                     : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
@@ -250,44 +381,37 @@ const App = () => {
         </div>
       </header>
 
-      {/* Main Content */}
       <main>
         {/* Home Section */}
         <section
           id="home"
-          className="relative h-screen bg-cover bg-center"
+          className="relative h-screen bg-cover bg-center bg-fixed"
           style={{ backgroundImage: `url(${backgroundImage})` }}
         >
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent from-45% to-white"></div>
-          <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4">
-            {/* Top Text */}
-            <div className="mb-4 md:mb-8 w-full max-w-md">
-              <p className="text-sm md:text-lg lg:text-xl text-[#C587CD] font-['Poppins']  drop-shadow-lg tracking-widest leading-relaxed">
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent from-45% to-white animate-pulse-slow"></div>
+          <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
+            <div className="mb-4 md:mb-8 w-full max-w-md animate-fade-in-down">
+              <p className="text-sm md:text-lg lg:text-xl text-white font-['Poppins'] drop-shadow-lg tracking-widest leading-relaxed [text-shadow:_0_0_8px_white,_0_0_16px_white]">
                 With hearts entwined and families united
               </p>
             </div>
 
-            {/* Main Names - Mobile Optimized */}
             <div className="flex flex-col items-center justify-center mb-4 md:mb-8 px-2">
-              {/* Benson */}
-              <h2 className="text-7xl sm:text-8xl md:text-9xl font-['Kapakana']  text-[#49284D] tracking-tight md:tracking-wider leading-tight drop-shadow-lg [text-shadow:_2px_2px_4px_white,_-2px_-2px_4px_white,_2px_-2px_4px_white,_-2px_2px_4px_white]">
+              <h2 className="text-7xl sm:text-8xl md:text-9xl font-['Imperial_Script'] italic text-[#49284D] tracking-tight md:tracking-wider leading-tight [text-shadow:_0_0_15px_white,_0_0_30px_white,_0_0_45px_white] animate-fade-in-up animation-delay-300 hover:scale-105 transition-transform duration-500 cursor-default">
                 Benson
               </h2>
 
-              {/* Ampersand */}
-              <h2 className="text-6xl sm:text-7xl md:text-8xl font-['Kapakana'] [text-shadow:_2px_2px_4px_white,_-2px_-2px_4px_white,_2px_-2px_4px_white,_-2px_2px_4px_white] text-[#49284D] my-1 md:my-2 drop-shadow-lg">
+              <h2 className="text-6xl sm:text-7xl md:text-8xl font-['Imperial_Script'] italic text-[#49284D] my-1 md:my-2 [text-shadow:_0_0_15px_white,_0_0_30px_white,_0_0_45px_white] animate-fade-in animation-delay-600 hover:rotate-12 transition-transform duration-500 cursor-default">
                 &
               </h2>
 
-              {/* Mich Rogene */}
-              <h2 className="text-7xl sm:text-8xl md:text-9xl font-['Kapakana'] [text-shadow:_2px_2px_4px_white,_-2px_-2px_4px_white,_2px_-2px_4px_white,_-2px_2px_4px_white] text-[#49284D] tracking-tight md:tracking-wider leading-tight drop-shadow-lg">
+              <h2 className="text-7xl sm:text-8xl md:text-9xl font-['Imperial_Script'] italic text-[#49284D] tracking-tight md:tracking-wider leading-tight [text-shadow:_0_0_15px_white,_0_0_30px_white,_0_0_45px_white] animate-fade-in-up animation-delay-900 hover:scale-105 transition-transform duration-500 cursor-default">
                 Mich Rogene
               </h2>
             </div>
 
-            {/* Bottom Text */}
-            <div className="mt-4 md:mt-8 w-full max-w-md">
-              <p className="text-sm md:text-lg lg:text-xl text-[#C587CD] font-['Poppins'] drop-shadow-lg tracking-widest leading-relaxed">
+            <div className="mt-4 md:mt-8 w-full max-w-md animate-fade-in-up animation-delay-1200">
+              <p className="text-sm md:text-lg lg:text-xl text-white font-['Poppins'] drop-shadow-lg tracking-widest leading-relaxed [text-shadow:_0_0_8px_white,_0_0_16px_white]">
                 Graciously invite you to share in the joy of their wedding day
               </p>
             </div>
@@ -295,37 +419,39 @@ const App = () => {
         </section>
 
         {/* Schedule Section */}
-        <section className="bg-white py-12 md:py-20">
+        <section
+          className={`bg-white py-12 md:py-20 transition-all duration-1000 ${
+            visibleSections.has("home")
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-10"
+          }`}
+        >
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-['Playfair_Display'] font-bold text-[#49284D] text-center mb-8 md:mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-['Playfair_Display'] font-bold text-[#49284D] text-center mb-8 md:mb-12 animate-fade-in">
               Wedding Schedule
             </h2>
 
             <div className="space-y-12">
-              {/* Church Ceremony */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-center">
-                {/* Date & Time */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-center transform transition-all duration-500 hover:scale-105 animate-fade-in-up animation-delay-300">
                 <div className="text-center md:text-right space-y-2">
-                  <h3 className="text-xl sm:text-2xl md:text-3xl font-['Playfair_Display'] font-semibold text-[#49284D]">
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-['Playfair_Display'] font-semibold text-[#49284D] transition-colors duration-300 hover:text-[#C587CD]">
                     Thursday, October 30
                   </h3>
-                  <p className="text-lg sm:text-xl md:text-2xl font-['Poppins'] font-medium text-[#C587CD]">
+                  <p className="text-lg sm:text-xl md:text-2xl font-['Poppins'] font-medium text-[#C587CD] animate-pulse-slow">
                     3:00 PM
                   </p>
                 </div>
 
                 <div className="hidden md:flex justify-center">
-                  <div className="w-px h-20 bg-[#C587CD]"></div>
+                  <div className="w-px h-20 bg-gradient-to-b from-transparent via-[#C587CD] to-transparent"></div>
                 </div>
 
-                {/* Horizontal Line for Mobile */}
                 <div className="md:hidden flex justify-center">
-                  <div className="w-32 h-px bg-[#C587CD] my-4"></div>
+                  <div className="w-32 h-px bg-gradient-to-r from-transparent via-[#C587CD] to-transparent my-4"></div>
                 </div>
 
-                {/* Venue Info */}
                 <div className="text-center md:text-left space-y-2">
-                  <p className="font-['Poppins'] font-bold text-lg sm:text-xl md:text-2xl text-[#49284D]">
+                  <p className="font-['Poppins'] font-bold text-lg sm:text-xl md:text-2xl text-[#49284D] transition-colors duration-300 hover:text-[#C587CD]">
                     PARISH OF THE IMMACULATE HEART OF MARY
                   </p>
                   <div className="font-['Poppins'] text-base sm:text-lg md:text-xl text-gray-700">
@@ -335,30 +461,26 @@ const App = () => {
                 </div>
               </div>
 
-              {/* Reception */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-center">
-                {/* Date & Time */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-center transform transition-all duration-500 hover:scale-105 animate-fade-in-up animation-delay-600">
                 <div className="text-center md:text-right space-y-2">
-                  <h3 className="text-xl sm:text-2xl md:text-3xl font-['Playfair_Display'] font-semibold text-[#49284D]">
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-['Playfair_Display'] font-semibold text-[#49284D] transition-colors duration-300 hover:text-[#C587CD]">
                     Thursday, October 30
                   </h3>
-                  <p className="text-lg sm:text-xl md:text-2xl font-['Poppins'] font-medium text-[#C587CD]">
+                  <p className="text-lg sm:text-xl md:text-2xl font-['Poppins'] font-medium text-[#C587CD] animate-pulse-slow">
                     6:00 PM
                   </p>
                 </div>
 
                 <div className="hidden md:flex justify-center">
-                  <div className="w-px h-20 bg-[#C587CD]"></div>
+                  <div className="w-px h-20 bg-gradient-to-b from-transparent via-[#C587CD] to-transparent"></div>
                 </div>
 
-                {/* Horizontal Line for Mobile */}
                 <div className="md:hidden flex justify-center">
-                  <div className="w-32 h-px bg-[#C587CD] my-4"></div>
+                  <div className="w-32 h-px bg-gradient-to-r from-transparent via-[#C587CD] to-transparent my-4"></div>
                 </div>
 
-                {/* Venue Info */}
                 <div className="text-center md:text-left space-y-2">
-                  <p className="font-['Poppins'] font-bold text-lg sm:text-xl md:text-2xl text-[#49284D]">
+                  <p className="font-['Poppins'] font-bold text-lg sm:text-xl md:text-2xl text-[#49284D] transition-colors duration-300 hover:text-[#C587CD]">
                     THE CHANDELIER EVENTS PLACE
                   </p>
                   <div className="font-['Poppins'] text-base sm:text-lg md:text-xl text-gray-700">
@@ -372,41 +494,51 @@ const App = () => {
         </section>
 
         {/* Photo Section */}
-        <PhotoGallery />
+        <div
+          className={`transition-all duration-1000 ${
+            visibleSections.has("photo")
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-10"
+          }`}
+        >
+          <PhotoGallery />
+        </div>
 
         {/* Theme Section */}
         <section
           id="theme"
-          className="relative min-h-screen bg-cover bg-center py-12 md:py-20"
+          className={`relative min-h-screen bg-cover bg-center bg-fixed py-12 md:py-20 transition-all duration-1000 ${
+            visibleSections.has("theme")
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-10"
+          }`}
           style={{ backgroundImage: `url(${themeBG})` }}
         >
-          <div className="absolute inset-0 bg-white/90 backdrop-blur-sm"></div>
+          <div className="absolute inset-0 bg-white/70 backdrop-blur-sm"></div>
           <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-['Playfair_Display'] font-bold text-[#49284D] text-center mb-8 md:mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-['Playfair_Display'] font-bold text-[#49284D] text-center mb-8 md:mb-12 animate-fade-in">
               Wedding Attire & Theme
             </h2>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Attire Card */}
-              <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg border border-gray-100">
+              <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-gray-100 transform transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:-translate-y-2 animate-fade-in-left">
                 <h3 className="text-xl md:text-2xl font-['Playfair_Display'] font-bold text-[#49284D] mb-6 text-center">
                   SEMI FORMAL ATTIRE
                 </h3>
 
                 <div className="space-y-6">
-                  {/* Principal Sponsors */}
-                  <div>
-                    <h4 className="font-['Playfair_Display'] font-semibold text-[#49284D] mb-3 text-lg">
+                  <div className="transform transition-all duration-300 hover:translate-x-2">
+                    <h4 className="font-['Playfair_Display'] font-semibold text-[#49284D] mb-3 text-2xl">
                       Principal Sponsors
                     </h4>
                     <div className="space-y-3 font-['Poppins'] text-gray-700">
-                      <p>
+                      <p className="transition-colors duration-300 hover:text-[#C587CD]">
                         <span className="font-medium text-[#49284D]">
                           Ladies:
                         </span>{" "}
                         Beige Long Gown
                       </p>
-                      <p>
+                      <p className="transition-colors duration-300 hover:text-[#C587CD]">
                         <span className="font-medium text-[#49284D]">
                           Gentlemen:
                         </span>{" "}
@@ -415,19 +547,18 @@ const App = () => {
                     </div>
                   </div>
 
-                  {/* Guests */}
-                  <div>
-                    <h4 className="font-['Playfair_Display'] font-semibold text-[#49284D] mb-3 text-lg">
+                  <div className="transform transition-all duration-300 hover:translate-x-2">
+                    <h4 className="font-['Playfair_Display'] font-semibold text-[#49284D] mb-3 text-2xl">
                       Guests
                     </h4>
                     <div className="space-y-3 font-['Poppins'] text-gray-700">
-                      <p>
+                      <p className="transition-colors duration-300 hover:text-[#C587CD]">
                         <span className="font-medium text-[#49284D]">
                           Ladies:
                         </span>{" "}
                         Long Gown or Maxi Dress
                       </p>
-                      <p>
+                      <p className="transition-colors duration-300 hover:text-[#C587CD]">
                         <span className="font-medium text-[#49284D]">
                           Gentlemen:
                         </span>{" "}
@@ -438,9 +569,8 @@ const App = () => {
                 </div>
               </div>
 
-              {/* Color Theme Card */}
-              <div className="space-y-6">
-                <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg border border-gray-100">
+              <div className="space-y-6 animate-fade-in-right">
+                <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-gray-100 transform transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:-translate-y-2">
                   <h3 className="text-xl md:text-2xl font-['Playfair_Display'] font-bold text-[#49284D] mb-6 text-center">
                     COLOR THEME
                   </h3>
@@ -455,10 +585,14 @@ const App = () => {
                       { name: "Lavender", color: "bg-[#E6E6FA]" },
                       { name: "Plum", color: "bg-[#8E4585]" },
                       { name: "Mauve", color: "bg-[#E0B0FF]" },
-                    ].map((item) => (
-                      <div key={item.name} className="text-center">
+                    ].map((item, index) => (
+                      <div
+                        key={item.name}
+                        className="text-center animate-bounce-in"
+                        style={{ animationDelay: `${index * 150}ms` }}
+                      >
                         <div
-                          className={`w-12 h-12 rounded-full mx-auto mb-2 border-2 border-gray-200 ${item.color} shadow-sm`}
+                          className={`w-12 h-12 rounded-full mx-auto mb-2 border-2 border-gray-200 ${item.color} shadow-sm transform transition-all duration-300 hover:scale-125 hover:shadow-xl hover:rotate-12 cursor-pointer`}
                         ></div>
                         <span className="font-['Poppins'] text-sm text-gray-600 font-medium">
                           {item.name}
@@ -467,7 +601,7 @@ const App = () => {
                     ))}
                   </div>
 
-                  <div className="text-center space-y-3 text-sm bg-gray-50 rounded-lg p-4">
+                  <div className="text-center space-y-3 text-sm bg-gradient-to-r from-gray-50 to-purple-50 rounded-lg p-4 transform transition-all duration-300 hover:scale-105">
                     <p className="font-['Poppins'] text-gray-700">
                       <span className="font-semibold text-[#49284D]">
                         White
@@ -481,8 +615,7 @@ const App = () => {
                   </div>
                 </div>
 
-                {/* Important Note */}
-                <div className="bg-gradient-to-r from-[#F5F4F5] to-[#F0E8F1] rounded-2xl p-6 border-l-4 border-[#C587CD] shadow-sm">
+                <div className="bg-gradient-to-r from-[#F5F4F5] to-[#F0E8F1] rounded-2xl p-6 border-l-4 border-[#C587CD] shadow-sm transform transition-all duration-500 hover:scale-105 hover:shadow-lg">
                   <p className="font-['Poppins'] text-gray-700 text-sm md:text-base text-center">
                     <span className="font-semibold text-[#49284D]">NOTE:</span>{" "}
                     We entreat our dearest guests to arrive in elegant attire,
@@ -496,23 +629,28 @@ const App = () => {
         </section>
 
         {/* Maps Section */}
-        <section id="maps" className="py-12 md:py-20 bg-[#F5F4F5]">
+        <section
+          id="maps"
+          className={`py-12 md:py-20 bg-gradient-to-b from-[#E6E6FA] to-[#F0E8F1] transition-all duration-1000 ${
+            visibleSections.has("maps")
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-10"
+          }`}
+        >
           <div className="max-w-6xl mx-auto px-4 sm:px-6">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-['Playfair_Display'] font-bold text-[#49284D] text-center mb-8 md:mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-['Playfair_Display'] font-bold text-[#49284D] text-center mb-8 md:mb-12 animate-fade-in">
               Venue & Location
             </h2>
 
             <div className="space-y-12">
-              {/* Church Venue */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-start">
-                {/* Venue Details */}
-                <div className="space-y-6">
+                <div className="space-y-6 animate-fade-in-left">
                   <h3 className="text-xl md:text-2xl font-['Playfair_Display'] font-semibold text-[#49284D] mb-4">
                     Church Ceremony
                   </h3>
-                  <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg border border-gray-100">
+                  <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-gray-100 transform transition-all duration-500 hover:scale-105 hover:shadow-2xl">
                     <div className="space-y-4 font-['Poppins'] text-gray-700">
-                      <div className="flex items-start">
+                      <div className="flex items-start transform transition-all duration-300 hover:translate-x-2">
                         <svg
                           className="w-5 h-5 mr-3 text-[#C587CD] mt-1 flex-shrink-0"
                           fill="currentColor"
@@ -534,7 +672,7 @@ const App = () => {
                         </div>
                       </div>
 
-                      <div className="flex items-start">
+                      <div className="flex items-start transform transition-all duration-300 hover:translate-x-2">
                         <svg
                           className="w-5 h-5 mr-3 text-[#C587CD] mt-1 flex-shrink-0"
                           fill="none"
@@ -557,13 +695,12 @@ const App = () => {
                       </div>
                     </div>
 
-                    {/* Quick Actions */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6">
                       <a
                         href="https://maps.google.com/?q=Parish+of+the+Immaculate+Heart+of+Mary+Antipolo"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-center bg-[#49284D] text-white px-4 py-3 rounded-lg font-['Poppins'] font-medium hover:bg-[#3a1f3c] transition-colors duration-200 shadow-md"
+                        className="flex items-center justify-center bg-[#49284D] text-white px-4 py-3 rounded-lg font-['Poppins'] font-medium hover:bg-[#3a1f3c] transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-1 transform"
                       >
                         <svg
                           className="w-5 h-5 mr-2"
@@ -578,7 +715,7 @@ const App = () => {
                         href="https://waze.com/ul/hwdw5j16hr"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-center bg-[#33CCFF] text-white px-4 py-3 rounded-lg font-['Poppins'] font-medium hover:bg-[#29a6d9] transition-colors duration-200 shadow-md"
+                        className="flex items-center justify-center bg-[#33CCFF] text-white px-4 py-3 rounded-lg font-['Poppins'] font-medium hover:bg-[#29a6d9] transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-1 transform"
                       >
                         <svg
                           className="w-5 h-5 mr-2"
@@ -593,15 +730,13 @@ const App = () => {
                   </div>
                 </div>
 
-                {/* QR Codes Section */}
-                <div className="text-center">
+                <div className="text-center animate-fade-in-right">
                   <h3 className="text-xl md:text-2xl font-['Playfair_Display'] font-semibold text-[#49284D] mb-6">
                     Church Location QR Codes
                   </h3>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    {/* Google Maps QR */}
-                    <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-200">
+                    <div className="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-500 transform hover:scale-110 hover:-translate-y-2">
                       <img
                         src={googleQR}
                         alt="Google Maps QR Code for Church"
@@ -615,8 +750,7 @@ const App = () => {
                       </p>
                     </div>
 
-                    {/* Waze QR */}
-                    <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-200">
+                    <div className="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-500 transform hover:scale-110 hover:-translate-y-2">
                       <img
                         src={wazeQR}
                         alt="Waze QR Code for Church"
@@ -633,16 +767,14 @@ const App = () => {
                 </div>
               </div>
 
-              {/* Reception Venue */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-start">
-                {/* Venue Details */}
-                <div className="space-y-6">
+                <div className="space-y-6 animate-fade-in-left">
                   <h3 className="text-xl md:text-2xl font-['Playfair_Display'] font-semibold text-[#49284D] mb-4">
                     Reception
                   </h3>
-                  <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg border border-gray-100">
+                  <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-gray-100 transform transition-all duration-500 hover:scale-105 hover:shadow-2xl">
                     <div className="space-y-4 font-['Poppins'] text-gray-700">
-                      <div className="flex items-start">
+                      <div className="flex items-start transform transition-all duration-300 hover:translate-x-2">
                         <svg
                           className="w-5 h-5 mr-3 text-[#C587CD] mt-1 flex-shrink-0"
                           fill="currentColor"
@@ -664,7 +796,7 @@ const App = () => {
                         </div>
                       </div>
 
-                      <div className="flex items-start">
+                      <div className="flex items-start transform transition-all duration-300 hover:translate-x-2">
                         <svg
                           className="w-5 h-5 mr-3 text-[#C587CD] mt-1 flex-shrink-0"
                           fill="none"
@@ -687,13 +819,12 @@ const App = () => {
                       </div>
                     </div>
 
-                    {/* Quick Actions */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6">
                       <a
                         href="https://maps.app.goo.gl/ag3JXenftSkjFAVBA"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-center bg-[#49284D] text-white px-4 py-3 rounded-lg font-['Poppins'] font-medium hover:bg-[#3a1f3c] transition-colors duration-200 shadow-md"
+                        className="flex items-center justify-center bg-[#49284D] text-white px-4 py-3 rounded-lg font-['Poppins'] font-medium hover:bg-[#3a1f3c] transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-1 transform"
                       >
                         <svg
                           className="w-5 h-5 mr-2"
@@ -708,7 +839,7 @@ const App = () => {
                         href="https://waze.com/ul?q=The%20Chandelier%20Events%20Place%20Antipolo"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-center bg-[#33CCFF] text-white px-4 py-3 rounded-lg font-['Poppins'] font-medium hover:bg-[#29a6d9] transition-colors duration-200 shadow-md"
+                        className="flex items-center justify-center bg-[#33CCFF] text-white px-4 py-3 rounded-lg font-['Poppins'] font-medium hover:bg-[#29a6d9] transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-1 transform"
                       >
                         <svg
                           className="w-5 h-5 mr-2"
@@ -723,15 +854,13 @@ const App = () => {
                   </div>
                 </div>
 
-                {/* QR Codes Section */}
-                <div className="text-center">
+                <div className="text-center animate-fade-in-right">
                   <h3 className="text-xl md:text-2xl font-['Playfair_Display'] font-semibold text-[#49284D] mb-6">
                     Reception QR Codes
                   </h3>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    {/* Google Maps QR */}
-                    <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-200">
+                    <div className="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-500 transform hover:scale-110 hover:-translate-y-2">
                       <img
                         src={mapReception}
                         alt="Google Maps QR Code for Reception"
@@ -745,8 +874,7 @@ const App = () => {
                       </p>
                     </div>
 
-                    {/* Waze QR */}
-                    <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-200">
+                    <div className="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-500 transform hover:scale-110 hover:-translate-y-2">
                       <img
                         src={mapReceptionWaze}
                         alt="Waze QR Code for Reception"
@@ -764,8 +892,7 @@ const App = () => {
               </div>
             </div>
 
-            {/* Instructions */}
-            <div className="bg-[#E8C2ED] bg-opacity-30 rounded-xl p-4 mt-8 border border-[#C587CD] border-opacity-30">
+            <div className="bg-[#E8C2ED] bg-opacity-30 rounded-xl p-4 mt-8 border border-[#C587CD] border-opacity-30 transform transition-all duration-300 hover:scale-105">
               <p className="font-['Poppins'] text-sm text-[#49284D] text-center">
                 <strong>How to use:</strong> Open your phone's camera and point
                 it at the QR code, then tap the notification to open directions.
@@ -776,20 +903,23 @@ const App = () => {
         </section>
 
         {/* Unplugged Ceremony Section */}
-        <section className="py-12 md:py-16 bg-[#E6E6FA]">
+        <section
+          className={`py-12 md:py-16 bg-white transition-all duration-1000 ${
+            visibleSections.has("maps")
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-10"
+          }`}
+        >
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
-            {/* Header */}
-            <div className="text-center mb-8">
+            <div className="text-center mb-8 animate-fade-in">
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-['Playfair_Display'] font-bold text-[#49284D] mb-4">
                 Unplugged Ceremony
               </h2>
               <div className="w-20 h-1 bg-[#C587CD] mx-auto"></div>
             </div>
 
-            {/* Main Content */}
             <div className="space-y-8">
-              {/* Unplugged Request */}
-              <div className="text-center">
+              <div className="text-center animate-fade-in-up animation-delay-300">
                 <p className="font-['Poppins'] text-lg md:text-xl text-gray-700 leading-relaxed mb-6">
                   To be truly present in each cherished moment, we kindly ask
                   that phones and cameras be set aside until we are joyfully
@@ -797,20 +927,18 @@ const App = () => {
                 </p>
               </div>
 
-              {/* Divider */}
-              <div className="flex items-center justify-center space-x-4 my-8">
+              <div className="flex items-center justify-center space-x-4 my-8 animate-fade-in animation-delay-600">
                 <div className="w-12 h-px bg-[#C587CD]"></div>
-                <div className="w-2 h-2 bg-[#C587CD] rounded-full"></div>
+                <div className="w-2 h-2 bg-[#C587CD] rounded-full animate-pulse-slow"></div>
                 <div className="w-12 h-px bg-[#C587CD]"></div>
               </div>
 
-              {/* Gifts Section */}
-              <div className="text-center">
+              <div className="text-center animate-fade-in-up animation-delay-900">
                 <h3 className="text-xl sm:text-2xl md:text-3xl font-['Playfair_Display'] font-semibold text-[#49284D] mb-6">
                   GIFTS
                 </h3>
 
-                <div className=" rounded-xl p-6 md:p-8  max-w-2xl mx-auto">
+                <div className="rounded-xl p-6 md:p-8 max-w-2xl mx-auto transform transition-all duration-500 hover:scale-105">
                   <p className="font-['Poppins'] text-gray-700 text-lg mb-4">
                     Your presence is treasured, your prayers most dear, these
                     are the gifts we hold sincere. Should you desire to honour
@@ -819,10 +947,13 @@ const App = () => {
                 </div>
               </div>
 
-              {/* Decorative Elements */}
               <div className="flex justify-center space-x-6 mt-8">
                 {[1, 2, 3].map((item) => (
-                  <div key={item} className="text-center">
+                  <div
+                    key={item}
+                    className="text-center animate-bounce-in"
+                    style={{ animationDelay: `${item * 200}ms` }}
+                  >
                     <div className="w-3 h-3 bg-[#C587CD] rounded-full mx-auto mb-2 opacity-60"></div>
                     <div className="w-1 h-1 bg-[#C587CD] rounded-full mx-auto opacity-40"></div>
                   </div>
@@ -833,13 +964,20 @@ const App = () => {
         </section>
 
         {/* RSVP Section */}
-        <section id="rsvp" className="py-12 md:py-20 bg-white">
+        <section
+          id="rsvp"
+          className={`py-12 md:py-20 bg-gradient-to-b from-[#E6E6FA] to-[#F0E8F1] transition-all duration-1000 ${
+            visibleSections.has("rsvp")
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-10"
+          }`}
+        >
           <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-['Playfair_Display'] font-bold text-[#49284D] mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-['Playfair_Display'] font-bold text-[#49284D] mb-4 animate-fade-in">
               RSVP
             </h2>
-            <p className="text-lg leading-relaxed">
-              <span className="font-bold text-[#49284D] ">
+            <p className="text-lg leading-relaxed animate-fade-in-up animation-delay-300">
+              <span className="font-bold text-[#49284D]">
                 We have reserved __ seats for you.
               </span>{" "}
               The favor of a reply is kindly requested on or before{" "}
@@ -847,7 +985,7 @@ const App = () => {
               .
             </p>
 
-            <p className="text-lg leading-relaxed font-medium text-[#49284D] bg-white py-3 px-4 rounded-lg ">
+            <p className="text-lg leading-relaxed font-medium text-[#49284D] bg-white/90 backdrop-blur-sm py-3 px-4 rounded-lg animate-fade-in-up animation-delay-600 transform transition-all duration-300 hover:scale-105">
               While we adore your little ones, we respectfully request an
               adults-only celebration.
             </p>
@@ -856,27 +994,32 @@ const App = () => {
               href="https://docs.google.com/forms/d/e/1FAIpQLSfaGsrhEFnkORUOooK5shd8Atc2ATylKKIVSNOGMZ3TYB6T3A/viewform?usp=dialog"
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-center justify-center bg-[#C587CD] text-white px-8 py-4 rounded-lg font-['Poppins'] font-medium hover:bg-[#b376bb] transition-all duration-500 shadow-md hover:shadow-lg transform hover:-translate-y-1 hover:scale-105 mt-6 animate-bounce hover:animate-none"
+              className="group inline-flex items-center justify-center bg-[#C587CD] text-white px-8 py-4 rounded-lg font-['Poppins'] font-medium hover:bg-[#b376bb] transition-all duration-500 shadow-md hover:shadow-2xl transform hover:-translate-y-2 hover:scale-110 mt-6 animate-fade-in-up animation-delay-900"
             >
               Click Here To RSVP
               <img
                 src={arrow}
                 alt="arrow"
-                className="ml-2 h-5 w-5 rotate-90 transition-all duration-300  group-hover:scale-125"
+                className="ml-2 h-5 w-5 rotate-90 transition-all duration-300 group-hover:scale-125 group-hover:translate-x-1"
               />
             </a>
           </div>
         </section>
 
-        {/* last Section */}
-        <section className="py-12 md:py-16 bg-[#E6E6FA]">
+        {/* Last Section */}
+        <section
+          className={`py-12 md:py-16 bg-white transition-all duration-1000 ${
+            visibleSections.has("rsvp")
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-10"
+          }`}
+        >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Left Side - Image */}
-            <div className="flex flex-col items-center justify-center px-4">
+            <div className="flex flex-col items-center justify-center px-4 animate-fade-in-left">
               <img
                 src={logo}
                 alt="logo"
-                className="w-full max-w-md  filter brightness-0"
+                className="w-full max-w-md filter brightness-0 transform transition-all duration-500 hover:scale-110 hover:rotate-3"
               />
               <p className="font-['Playfair_Display'] text-xl font-semibold text-[#49284D]">
                 Benson & Mich
@@ -886,20 +1029,31 @@ const App = () => {
               </p>
             </div>
 
-            {/* Right Side - Message */}
-            <div className="flex flex-col items-center justify-center px-4 text-center">
+            <div className="flex flex-col items-center justify-center px-4 text-center animate-fade-in-right">
               <h3 className="text-2xl md:text-3xl font-['Playfair_Display'] font-bold text-[#49284D] mb-4">
                 HELP US CAPTURE THE LOVE AFTER
               </h3>
-              <p className="font-['Poppins'] justify-center text-gray-700 leading-relaxed max-w-md">
+              <p className="font-['Poppins'] justify-center text-gray-700 leading-relaxed max-w-md mb-6">
                 We are deeply grateful for your presence in our lives and on
                 this special day. Your love and support mean the world to us as
                 we embark on this beautiful journey together.
               </p>
-              <div className="flex flex-row justify-center space-x-6 mt-6">
-                <img src={facebookIcon} alt="facebook" className="h-8 w-8 " />
-                <img src={instagramIcon} alt="instagram" className="h-8 w-8 " />
-                <img src={tiktokIcon} alt="tiktok" className="h-8 w-8 " />
+              <div className="flex flex-row justify-center space-x-6 mt-2">
+                <img
+                  src={facebookIcon}
+                  alt="facebook"
+                  className="h-8 w-8 transform transition-all duration-300 hover:scale-125 hover:-translate-y-1 cursor-pointer"
+                />
+                <img
+                  src={instagramIcon}
+                  alt="instagram"
+                  className="h-8 w-8 transform transition-all duration-300 hover:scale-125 hover:-translate-y-1 cursor-pointer"
+                />
+                <img
+                  src={tiktokIcon}
+                  alt="tiktok"
+                  className="h-8 w-8 transform transition-all duration-300 hover:scale-125 hover:-translate-y-1 cursor-pointer"
+                />
               </div>
             </div>
           </div>
